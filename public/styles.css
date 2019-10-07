@@ -1,0 +1,184 @@
+body {
+  font-family: monospace;
+}
+.hidden {
+  display: none;
+}
+
+.book {
+  font-family: monospace;
+  padding: 10px;
+  margin-right: 20px;
+  margin-bottom: 20px;
+  border: 3px solid blue;
+  background-color: lightcyan;
+  min-width: 320px;
+}
+
+.book p {
+  margin-top: 0;
+  margin-bottom: 6px;
+}
+
+@media screen and (max-width: 720px) {
+  .book {
+    max-width: 100%;
+  }
+}
+
+@media screen and (min-width: 721px) {
+  .book {
+    max-width: 320px;
+  }
+  .books {
+    display: flex;
+    flex-wrap: wrap;
+  }
+  .plan-inner {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+}
+
+#results {
+  list-style: none;
+  padding-left: 0;
+  max-width: 600px;
+}
+
+.search-result {
+  list-style: none;
+  cursor: pointer;
+  display: block;
+  border-bottom: 1px solid goldenrod;
+  border-left: 1px solid goldenrod;
+  border-right: 1px solid goldenrod;
+  padding: 5px;
+}
+
+.search-result:first-child {
+  border-top: 1px solid goldenrod;
+}
+
+.search-result:hover {
+  background-color: papayawhip;
+}
+
+textarea {
+  max-width: 500px;
+  width: 100%;
+}
+
+.image {
+  position: relative;
+  display: flex;
+  align-items: center;
+  margin: 15px 0 10px 0;
+  justify-content: center;
+}
+
+.review {
+  background-color: teal;
+  color: white;
+  display: inline-block;
+  padding: 2px 6px;
+  border-radius: 6px;
+  font-weight: bold;
+}
+
+.review-container {
+  position: absolute;
+}
+
+.rating {
+  display: flex;
+  justify-content: center;
+}
+
+.rating-inner {
+  font-size: 17px;
+}
+
+.edit-book {
+  margin-top: 10px;
+}
+
+.cancel-edit {
+  margin-top: 10px;
+}
+
+.delete-button {
+  display: inline-block;
+}
+
+input,
+textarea {
+  font-size: 16px;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+}
+
+.header h1 {
+  margin-right: 40px;
+}
+
+.plans {
+  border: 1px solid paleturquoise;
+  border-bottom: 0;
+  max-width: 600px;
+}
+
+.plan {
+  background-color: honeydew;
+  border-bottom: 1px solid paleturquoise;
+  padding: 10px;
+}
+
+
+.plan-image {
+  max-width: 50px;
+  margin-right: 10px;
+}
+
+.plan-image img {
+  max-width: 100%;
+}
+
+.plan h2 {
+  margin-top: 0;
+}
+
+.plan-info {
+  display: flex;
+}
+
+.logout {
+  margin-top: 40px;
+}
+
+#info {
+  overflow: hidden;
+}
+
+#info img {
+  float: left;
+  margin-right: 10px;
+  max-width: 50px;
+}
+
+.plan-buttons {
+  min-width: 160px;
+}
+
+h2 a {
+  color: black;
+}
+
+.cancel-edit {
+  margin: 10px 0;
+}

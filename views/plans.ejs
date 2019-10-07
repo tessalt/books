@@ -1,0 +1,29 @@
+<html>
+  <head>
+    <title>Books</title>
+    <link href="/styles.css" rel="stylesheet" type="text/css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  </head>
+  <body>
+    <header class="header">
+      <h1><%= username %>'s to-read list</h1>
+      <a href="/users/<%= username %>">read</a>
+    </header>
+
+    <div class="plans">
+      <% plans.forEach((plan) => { %> 
+        <%- include('partials/plan', {plan:plan}) %> 
+      <% }) %>
+    </div>
+     <div class="logout">
+      <% if (logged_in) { %>
+        <a href="/logoff">Log out</a>
+      <% } %>
+      <% if (!logged_in) { %>
+        <a href="/auth/twitter">Log in</a>
+      <% } %>
+    </div>
+    <script src="/plans.js"></script>
+
+  </body>
+</html>
