@@ -7,7 +7,7 @@
   <body>
     <header class="header">
       <h1><%= username %>'s to-read list</h1>
-      <a href="/home">read</a>
+      <%- include('partials/nav', { current: 'to-read' }) %>
     </header>
     
 
@@ -54,7 +54,7 @@
 
     <div class="plans">
       <% plans.forEach((plan) => { %> 
-        <%- include('partials/plan', {plan:plan}) %> 
+        <%- include('partials/plan', {plan:plan, type: 'plan'}) %> 
       <% }) %>
     </div>
     

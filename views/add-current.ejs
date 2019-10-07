@@ -6,9 +6,10 @@
   </head>
   <body>
     <header class="header">
-      <h1><%= username %>'s books</h1>
-      <%- include('partials/nav', { current: 'read' }) %>
+      <h1><%= username %> is reading</h1>
+      <%- include('partials/nav', { current: 'reading' }) %>
     </header>
+    
 
     <form id="search">
       <input id="query" name="query" type="text" placeholder="search..." />
@@ -24,7 +25,7 @@
     </div>
 
     <div>
-      <form method="POST" id="selected" action="/add-review" class="hidden">
+      <form method="POST" id="selected" action="/add-current-read" class="hidden">
         <div id="info">
           
         </div>
@@ -34,24 +35,7 @@
         <input name="image_url" type="hidden" id="image_url" />
         <input name="source_id" type="hidden" id="source_id" />
         <input name="description" type="hidden" id="description" />
-        <p>
-          <label for="review">Review</label><br />
-          <textarea name="review"> </textarea>
-        </p>
-        <p>
-          <label for="rating">Rating </label><br />
-          <input type="radio" value="0" name="rating" /> 0
-          <input type="radio" value="1" name="rating" /> 1
-          <input type="radio" value="2" name="rating" /> 2
-          <input type="radio" value="3" name="rating" /> 3
-          <input type="radio" value="4" name="rating" /> 4
-          <input type="radio" value="5" name="rating" /> 5
-        </p>
-
-        <p>
-          <label for="date_read">Date read</label><br />
-          <input type="date" id="datePicker" name="date_read" />        
-        </p>
+        
         <button type="submit">
           Add
         </button>
@@ -59,14 +43,15 @@
     </div>
 
     <h2>
-      the <%= reviews.length %> books i read
+      reading <%= reads.length %> books 
     </h2>
 
-    <div class="books">
-      <% reviews.forEach((review) => { %> 
-        <%- include('partials/review', {review:review}) %> 
+    <div class="plans">
+      <% reads.forEach((read) => { %> 
+        <%- include('partials/plan', {plan:read, type: 'current'}) %> 
       <% }) %>
     </div>
+    
      <div class="logout">
       <% if (logged_in) { %>
         <a href="/logoff">Log out</a>
@@ -75,9 +60,8 @@
         <a href="/auth/twitter">Log in</a>
       <% } %>
     </div>
-    
     <script src="/add.js"></script>
-    <script src="/reviews.js"></script>
+    <script src="/plans.js"></script>
 
   </body>
 </html>

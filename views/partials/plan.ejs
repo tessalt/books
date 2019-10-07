@@ -15,28 +15,49 @@
     </div>
     <div class="plan-buttons">
       <% if (logged_in) { %>
-        <form
-          action="/delete-plan/<%= plan.id %>"
-          method="POST"
-          class="delete-button"
-        >
-          <button type="submit" class="delete-book">
-            delete
-          </button>
-        </form>
+        <% if (type === 'current') { %>
+          <form
+            action="/delete-current/<%= plan.id %>"
+            method="POST"
+            class="delete-button"
+          >
+            <button type="submit" class="delete-book">
+              delete
+            </button>
+          </form>
+
+        <% } %>
+        <% if (type === 'plan') { %>
+          <form
+            action="/delete-plan/<%= plan.id %>"
+            method="POST"
+            class="delete-button"
+          >
+            <button type="submit" class="delete-book">
+              delete
+            </button>
+          </form>
+          <form action="/plans/<%= plan.id %>/create-current-read"
+            method="POST"
+            class="add-current-form">
+            <button type="submit">
+              mark as reading 
+            </button>
+          </form>
+        <% } %>
         <button type="button" class="mark-as-read" data-planid="<%= plan.id %>">
-          Mark as read
+          mark as read
         </button>
       <% } %>
     </div>
   </div>
 
   <form
-    action="/plans/<%= plan.id %>/create-review"
-    class="hidden add-form"
+    action="<%= type === 'plan' ? '/plans/' + plan.id + '/create-review' : '/current-reads/' + plan.id + '/create-review' %>"
+    class="hidden add-review-form"
     method="POST"
   >
-    <button type="button" class="cancel-add">
+    <button type="button" class="cancel-add-review">
       cancel
     </button>
     <input name="source_id" type="hidden" id="source_id" />
@@ -68,15 +89,12 @@
   [...document.querySelectorAll(".mark-as-read")].forEach(item => {
     item.addEventListener("click", evt => {
       const div = document.getElementById("plan-" + evt.target.dataset.planid);
-      div.querySelector(".add-form").classList.remove("hidden");
-      div.querySelector(".datepicker").value = new Date()
-        .toISOString()
-        .substr(0, 10);
-    });
+      div.querySelector(".add-review-form").classList.remove("hidden");
+      [...div.querySelectorAll(".datepicker")].forEach((input) => input.value = new Date().toISOString().substr(0, 10))});
   });
-  [...document.querySelectorAll(".cancel-add")].forEach(item => {
+  [...document.querySelectorAll(".cancel-add-review")].forEach(item => {
     item.addEventListener("click", evt => {
-      [...document.querySelectorAll(".add-form")].forEach(form =>
+      [...document.querySelectorAll(".add-review-form")].forEach(form =>
         form.classList.add("hidden")
       );
     });

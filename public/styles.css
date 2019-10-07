@@ -1,6 +1,21 @@
 body {
   font-family: monospace;
 }
+
+
+button {
+  background: white;
+  border: 1px solid mediumslateblue;
+  padding: 4px 8px;
+  color: mediumslateblue;
+  border-radius: 5px;
+  font-family: monospace;
+}
+
+form {
+  margin-bottom: 0;
+}
+
 .hidden {
   display: none;
 }
@@ -10,7 +25,7 @@ body {
   padding: 10px;
   margin-right: 20px;
   margin-bottom: 20px;
-  border: 3px solid blue;
+  border: 3px solid dodgerblue;
   background-color: lightcyan;
   min-width: 320px;
 }
@@ -95,6 +110,7 @@ textarea {
 .rating {
   display: flex;
   justify-content: center;
+  margin-bottom: 10px;
 }
 
 .rating-inner {
@@ -130,7 +146,7 @@ textarea {
 .plans {
   border: 1px solid paleturquoise;
   border-bottom: 0;
-  max-width: 600px;
+  max-width: 700px;
 }
 
 .plan {
@@ -172,7 +188,12 @@ textarea {
 }
 
 .plan-buttons {
-  min-width: 160px;
+  /* min-width: 170px; */
+  display: flex;
+}
+
+.plan-buttons button {
+  margin-left: 5px;
 }
 
 h2 a {
@@ -181,4 +202,40 @@ h2 a {
 
 .cancel-edit {
   margin: 10px 0;
+}
+
+.homepage {
+  background-color: aquamarine;
+  display: flex;
+}
+
+.homepage-box {
+  background-color: aliceblue;
+  padding: 0 20px 20px 20px;
+  border: 3px solid dodgerblue;
+}
+
+.homepage a {
+  color: mediumslateblue;
+  text-decoration: none;
+  border: 1px solid mediumslateblue;
+  padding: 4px 8px;
+  border-radius: 5px;
+}
+
+#search {
+  display: flex;
+}
+
+#search input {
+  margin-right: 10px;
+}
+
+.nav a {
+  color: mediumslateblue;
+  font-size: 16px;
+}
+
+.nav a.current {
+  font-weight: bold;
 }

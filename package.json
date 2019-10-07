@@ -7,19 +7,20 @@
     "start": "node server.js"
   },
   "dependencies": {
+    "@rgrove/parse-xml": "*",
     "connect-ensure-login": "^0.1.1",
     "cookie-parser": "^1.4.3",
+    "dotenv": "^8.1.0",
+    "ejs": "2.7.1",
     "express": "^4.16.3",
     "express-session": "^1.15.6",
+    "fast-xml-parser": "*",
+    "goodreads-api-node": "0.0.10",
+    "node-fetch": "2.6.0",
     "passport": "^0.4.0",
     "passport-twitter": "^1.0.4",
-    "sqlite3": "*",
-		"sequelize": "*",
-    "ejs": "2.7.1",
-    "node-fetch": "2.6.0",
-    "goodreads-api-node": "0.0.10",
-    "@rgrove/parse-xml": "*",
-    "fast-xml-parser": "*"
+    "sequelize": "*",
+    "sqlite3": "*"
   },
   "engines": {
     "node": "8.x"

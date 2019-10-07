@@ -6,6 +6,7 @@ const fetch = require("node-fetch");
 const parseXml = require("@rgrove/parse-xml");
 const parser = require("fast-xml-parser");
 const path = require("path");
+require('dotenv').config()
 const { searchBooks } = require("./booksearch");
 
 const Strategy = require("passport-twitter").Strategy;
@@ -89,15 +90,22 @@ sequelize
         type: Sequelize.TEXT
       }
     });
+    
+    CurrentRead = sequelize.define("current_reads", {
+    });
 
     User.hasMany(Review);
     User.hasMany(Plan);
+    User.hasMany(CurrentRead);
     Book.hasMany(Review);
     Review.belongsTo(Book);
     Review.belongsTo(User);
     Plan.belongsTo(User);
     Book.hasMany(Plan);
     Plan.belongsTo(Book);
+    CurrentRead.belongsTo(User);
+    Book.hasMany(CurrentRead);
+    CurrentRead.belongsTo(Book);
     setup();
   })
   .catch(function(err) {
@@ -109,17 +117,22 @@ function setup() {
   Book.sync();
   Review.sync();
   Plan.sync();
+  CurrentRead.sync();
 }
+
+
+const prodCallback = "https://" +
+        process.env.PROJECT_DOMAIN +
+        ".glitch.me/login/twitter/return"
+
+const devCallback = "http://localhost:4000/login/twitter/return";
 
 passport.use(
   new Strategy(
     {
       consumerKey: process.env.TWITTER_CONSUMER_KEY,
       consumerSecret: process.env.TWITTER_CONSUMER_SECRET,
-      callbackURL:
-        "https://" +
-        process.env.PROJECT_DOMAIN +
-        ".glitch.me/login/twitter/return"
+      callbackURL: process.env.NODE_ENV === 'development' ? devCallback : prodCallback
     },
     async function(token, tokenSecret, profile, cb) {
       let user = await User.findOne({ where: { twitter_id: profile.id } });
@@ -183,6 +196,12 @@ app.get(
     res.redirect("/home");
   }
 );
+
+async function localAuth(req, res, next) {
+  const user = await User.findByPk(1);
+  req.user = user;
+  next();
+}
 
 app.get("/users/:username", async function(req, res) {
   const user = await User.findOne({
@@ -252,7 +271,6 @@ app.get(
   "/home",
   require("connect-ensure-login").ensureLoggedIn("/"),
   async function(req, res) {
-    console.log(req.user)
     const reviews = await req.user.getReviews({
       order: [["date_read", "DESC"]],
       include: [{ model: Book }]
@@ -273,7 +291,6 @@ app.get(
       order: [["createdAt", "DESC"]],
       include: [{ model: Book }]
     });
-    console.log(plans)
     res.render("add-plan", {
       username: req.user.twitter_username,
       logged_in: !!req.user,
@@ -282,11 +299,32 @@ app.get(
   }
 );
 
+app.get(
+  "/reading",
+  require("connect-ensure-login").ensureLoggedIn("/"),
+  async function(req, res) {
+    // const reads = await req.user.getCurrentReads({
+    //   order: [["createdAt", "DESC"]],
+    //   include: [{ model: Book }]
+    // });
+    const reads = await CurrentRead.findAll({
+      where: {
+        userId: req.user.id
+      },
+      include: [{model: Book}]
+    })
+    res.render("add-current", {
+      username: req.user.twitter_username,
+      logged_in: !!req.user,
+      reads
+    });
+  }
+);
+
 app.post(
   "/add-review",
   require("connect-ensure-login").ensureLoggedIn("/"),
   async function(req, res) {
-    console.log(req.body)
     let book = await Book.findOne({
       where: {
         source_id: req.body.source_id
@@ -337,6 +375,50 @@ app.post(
 );
 
 app.post(
+  "/current-reads/:id/create-review",
+  require("connect-ensure-login").ensureLoggedIn("/"),
+  async function(req, res) {
+    const read = await CurrentRead.findOne({
+      where: {
+        id: req.params.id,
+        userId: req.user.id
+      }
+    });
+    const book = await read.getBook();
+    const review = await Review.create({
+      review: req.body.review ? req.body.review.trim() : "",
+      rating: req.body.rating ? parseInt(req.body.rating) : null,
+      date_read: req.body.date_read
+    });
+    await book.addReview(review);
+    await req.user.addReview(review);
+    await read.destroy();
+    res.redirect("/home");
+  }
+);
+app.post(
+  "/plans/:id/create-current-read",
+  require("connect-ensure-login").ensureLoggedIn("/"),
+  async function(req, res) {
+    const plan = await Plan.findOne({
+      where: {
+        id: req.params.id,
+        userId: req.user.id
+      }
+    });
+    const book = await plan.getBook();
+    const read = await CurrentRead.create({
+      bookId: book.id,
+      userId: req.user.id
+    });
+    // await book.addCurrentRead(read);
+    // await req.user.addCurrentRead(read);
+    await plan.destroy();
+    res.redirect("/reading");
+  }
+);
+
+app.post(
   "/add-plan",
   require("connect-ensure-login").ensureLoggedIn("/"),
   async function(req, res) {
@@ -361,6 +443,32 @@ app.post(
     await book.addPlan(plan);
     await req.user.addPlan(plan);
     res.redirect("/to-read");
+  }
+);
+
+app.post(
+  "/add-current-read",
+  require("connect-ensure-login").ensureLoggedIn("/"),
+  async function(req, res) {
+    let book = await Book.findOne({
+      where: {
+        source_id: req.body.source_id
+      }
+    });
+    if (!book) {
+      book = await Book.create({
+        source_id: req.body.source_id,
+        title: req.body.title,
+        author: req.body.author,
+        year: req.body.year,
+        image_url: req.body.image_url,
+        description: req.body.description
+      });
+    }
+    const current = await CurrentRead.create();
+    await book.addCurrentRead(current);
+    await req.user.addCurrentRead(current);
+    res.redirect("/reading");
   }
 );
 
@@ -410,6 +518,20 @@ app.post(
       }
     });
     res.redirect("/to-read");
+  }
+);
+
+app.post(
+  "/delete-current/:id",
+  require("connect-ensure-login").ensureLoggedIn("/"),
+  async function(req, res) {
+    await CurrentRead.destroy({
+      where: {
+        id: req.params.id,
+        userId: req.user.id
+      }
+    });
+    res.redirect("/reading");
   }
 );
 
