@@ -1,0 +1,26 @@
+<html>
+  <head>
+    <title>Books</title>
+    <link href="/styles.css" rel="stylesheet" type="text/css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  </head>
+  <body>
+    <h1>
+      <%= username %>'s books
+    </h1>
+    <div class="books">
+      <% reviews.forEach((review) => { %> 
+        <%- include('partials/review', {review: review}); %> 
+      <% }) %>
+    </div>
+    <div class="logout">
+      <% if (logged_in) { %>
+        <a href="/logoff">Log out</a>
+      <% } %>
+      <% if (!logged_in) { %>
+        <a href="/auth/twitter">Log in</a>
+      <% } %>
+    </div>
+    <script src="/reviews.js"></script>
+  </body>
+</html>

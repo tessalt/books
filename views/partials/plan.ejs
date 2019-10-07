@@ -1,0 +1,84 @@
+<div class="plan" id="plan-<%= plan.id %>">
+  <div class="plan-inner">
+    <div class="plan-info">
+      <div class="plan-image">
+        <img src="<%= plan.book.image_url %>" />
+      </div>
+      <div>
+        <h2>
+          <%= plan.book.title %>
+        </h2>
+        <p>
+          <%= plan.book.author %>, <%= plan.book.year %>
+        </p>
+      </div>
+    </div>
+    <div class="plan-buttons">
+      <% if (logged_in) { %>
+        <form
+          action="/delete-plan/<%= plan.id %>"
+          method="POST"
+          class="delete-button"
+        >
+          <button type="submit" class="delete-book">
+            delete
+          </button>
+        </form>
+        <button type="button" class="mark-as-read" data-planid="<%= plan.id %>">
+          Mark as read
+        </button>
+      <% } %>
+    </div>
+  </div>
+
+  <form
+    action="/plans/<%= plan.id %>/create-review"
+    class="hidden add-form"
+    method="POST"
+  >
+    <button type="button" class="cancel-add">
+      cancel
+    </button>
+    <input name="source_id" type="hidden" id="source_id" />
+    <p>
+      <label for="review">Review</label><br />
+      <textarea name="review"> </textarea>
+    </p>
+    <p>
+      <label for="rating">Rating </label>
+      <input type="radio" value="0" name="rating" /> 0
+      <input type="radio" value="1" name="rating" /> 1
+      <input type="radio" value="2" name="rating" /> 2
+      <input type="radio" value="3" name="rating" /> 3
+      <input type="radio" value="4" name="rating" /> 4
+      <input type="radio" value="5" name="rating" /> 5
+    </p>
+
+    <p>
+      <label for="date_read">Date read</label>
+      <input type="date" id="datePicker" class="datepicker" name="date_read" />
+    </p>
+    <button type="submit">
+      Update
+    </button>
+  </form>
+
+</div>
+<script>
+  [...document.querySelectorAll(".mark-as-read")].forEach(item => {
+    item.addEventListener("click", evt => {
+      const div = document.getElementById("plan-" + evt.target.dataset.planid);
+      div.querySelector(".add-form").classList.remove("hidden");
+      div.querySelector(".datepicker").value = new Date()
+        .toISOString()
+        .substr(0, 10);
+    });
+  });
+  [...document.querySelectorAll(".cancel-add")].forEach(item => {
+    item.addEventListener("click", evt => {
+      [...document.querySelectorAll(".add-form")].forEach(form =>
+        form.classList.add("hidden")
+      );
+    });
+  });
+</script>

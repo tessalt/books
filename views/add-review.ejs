@@ -1,0 +1,83 @@
+<html>
+  <head>
+    <title>Books</title>
+    <link href="/styles.css" rel="stylesheet" type="text/css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  </head>
+  <body>
+    <header class="header">
+      <h1><%= username %>'s books</h1>
+      <a href="/to-read">To-read</a>
+    </header>
+
+    <form id="search">
+      <input id="query" name="query" type="text" placeholder="search..." />
+      <button type="submit">
+        search
+      </button>
+    </form>
+
+    <ul id="results"></ul>
+    
+    <div id="loading" class="hidden">
+      searching...
+    </div>
+
+    <div>
+      <form method="POST" id="selected" action="/add-review" class="hidden">
+        <div id="info">
+          
+        </div>
+        <input name="title" required type="hidden" id="title"  />
+        <input name="author" type="hidden" id="author" required />
+        <input name="year" type="hidden" id="year" />
+        <input name="image_url" type="hidden" id="image_url" />
+        <input name="source_id" type="hidden" id="source_id" />
+        <input name="description" type="hidden" id="description" />
+        <p>
+          <label for="review">Review</label><br />
+          <textarea name="review"> </textarea>
+        </p>
+        <p>
+          <label for="rating">Rating </label><br />
+          <input type="radio" value="0" name="rating" /> 0
+          <input type="radio" value="1" name="rating" /> 1
+          <input type="radio" value="2" name="rating" /> 2
+          <input type="radio" value="3" name="rating" /> 3
+          <input type="radio" value="4" name="rating" /> 4
+          <input type="radio" value="5" name="rating" /> 5
+        </p>
+
+        <p>
+          <label for="date_read">Date read</label><br />
+          <input type="date" id="datePicker" name="date_read" />        
+        </p>
+        <button type="submit">
+          Add
+        </button>
+      </form>
+    </div>
+
+    <h2>
+      the <%= reviews.length %> books i read
+    </h2>
+
+    <div class="books">
+      <% reviews.forEach((review) => { %> 
+        <%- include('partials/review', {review:review}) %> 
+      <% }) %>
+    </div>
+     <div class="logout">
+      <% if (logged_in) { %>
+        <a href="/logoff">Log out</a>
+      <% } %>
+      <% if (!logged_in) { %>
+        <a href="/auth/twitter">Log in</a>
+      <% } %>
+    </div>
+    
+    <script src="/add.js"></script>
+    <script src="/reviews.js"></script>
+
+  </body>
+</html>

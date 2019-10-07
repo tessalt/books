@@ -1,0 +1,73 @@
+<html>
+  <head>
+    <title>Books</title>
+    <link href="/styles.css" rel="stylesheet" type="text/css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  </head>
+  <body>
+    <header class="header">
+      <h1><%= username %>'s to-read list</h1>
+      <a href="/home">read</a>
+    </header>
+    
+
+    <form id="search">
+      <input id="query" name="query" type="text" placeholder="search..." />
+      <button type="submit">
+        search
+      </button>
+    </form>
+
+    <ul id="results"></ul>
+    
+    <div id="loading" class="hidden">
+      searching...
+    </div>
+
+    <div>
+      <form method="POST" id="selected" action="/add-plan" class="hidden">
+        <div id="info">
+          
+        </div>
+        <input name="title" required type="hidden" id="title"  />
+        <input name="author" type="hidden" id="author" required />
+        <input name="year" type="hidden" id="year" />
+        <input name="image_url" type="hidden" id="image_url" />
+        <input name="source_id" type="hidden" id="source_id" />
+        <input name="description" type="hidden" id="description" />
+      
+        <p>
+          <label for="notes">Notes</label><br />
+          <textarea name="notes"> </textarea>
+        </p>
+       
+        
+        <button type="submit">
+          Add
+        </button>
+      </form>
+    </div>
+
+    <h2>
+      <%= plans.length %> books to read
+    </h2>
+
+    <div class="plans">
+      <% plans.forEach((plan) => { %> 
+        <%- include('partials/plan', {plan:plan}) %> 
+      <% }) %>
+    </div>
+    
+     <div class="logout">
+      <% if (logged_in) { %>
+        <a href="/logoff">Log out</a>
+      <% } %>
+      <% if (!logged_in) { %>
+        <a href="/auth/twitter">Log in</a>
+      <% } %>
+    </div>
+    <script src="/add.js"></script>
+    <script src="/plans.js"></script>
+
+  </body>
+</html>
