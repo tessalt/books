@@ -16,7 +16,7 @@
     "express-session": "^1.15.6",
     "fast-xml-parser": "*",
     "goodreads-api-node": "0.0.10",
-    "node-fetch": "2.6.0",
+    "node-fetch": "2.6.1",
     "passport": "^0.4.0",
     "passport-twitter": "^1.0.4",
     "sequelize": "*",
